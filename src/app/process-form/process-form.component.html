@@ -1,0 +1,57 @@
+<form [formGroup]="claimForm" class="grid grid-cols-2 bg-gray gap-x-5 gap-y-1">
+  Value: {{ claimForm.value | json }}
+  <div class="flex flex-nowrap p-1">
+    <div class="flex-1">
+      <input formControlName="eventDate" dir="rtl" type="date" class="p-1"/>
+    </div>
+    <div class="flex-none">
+      <span dir="rtl" class="whitespace-nowrap">תאריך אירוע:</span>
+    </div>
+  </div>
+
+  <div class="flex flex-nowrap p-1">
+    <div class="flex-1">
+        <app-select formControlName="claimType" [options]="claimTypeOptions"></app-select>
+    </div>
+    <div class="flex-none">
+      <span dir="rtl" class="whitespace-nowrap">סוג תביעה על:</span>
+    </div>
+  </div>
+
+  <div class="flex flex-nowrap p-1">
+    <div class="flex-1">
+        <app-select formControlName="injuryType" [options]="injuryTypeOptions"></app-select>
+    </div>
+    <div class="flex-none">
+      <span dir="rtl"  class="whitespace-nowrap">מהות האירוע:</span>
+    </div>
+  </div>
+
+  <div class="flex flex-nowrap p-1">
+    <div class="flex-1">
+        <app-select formControlName="claimCause" [options]="claimCauseOptions"></app-select>
+    </div>
+    <div class="flex-none">
+      <span dir="rtl" class="whitespace-nowrap">סיבת אירוע:</span>
+    </div>
+  </div>
+
+  <div class="flex flex-nowrap p-1">
+    <div class="flex-1">
+        <app-select formControlName="submitionMethod" [options]="submitionMethodOptions"></app-select>
+    </div>
+    <div class="flex-none">
+      <span dir="rtl" class="whitespace-nowrap">אופן קבלת התביעה:</span>
+    </div>
+  </div>
+
+  <div class="flex flex-nowrap p-1">
+    <div class="flex-1">
+        <app-select formControlName="identityTypes" [options]="identityTypesOptions"></app-select>
+    </div>
+    <div class="flex-none">
+      <span dir="rtl" class="whitespace-nowrap">תביעה הוגשה באמצעות:</span>
+    </div>
+  </div>
+  
+</form>

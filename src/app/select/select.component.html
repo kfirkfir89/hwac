@@ -1,0 +1,4 @@
+<select  dir="rtl" class="w-200 p-1">
+  <option value="" disabled selected hidden></option>
+  <option *ngFor="let option of options" [value]="option.code">{{ option.value }}</option>
+</select>
