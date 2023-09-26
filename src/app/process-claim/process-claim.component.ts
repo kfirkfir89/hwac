@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { FormDataSubscription, FormStateService } from '../services/formState.service';
+import { Subject, takeUntil } from 'rxjs';
+import { ContactStateService } from '../services/contactState.service';
 export type ContactPersons = {
   id: number;
   deliveryFlag: boolean;
@@ -91,8 +95,11 @@ export class ProcessClaimComponent implements OnInit {
   superClaim: SuperClaim;
   insured: Insured;
   contactPersons: ContactPersons[] = [];
-  
-  constructor() {
+  childForm: FormGroup | null = null;
+  receivedFormData: FormDataSubscription | null = null;
+  private destroy$ = new Subject<void>();
+
+  constructor(private formStateService: FormStateService, private contactService: ContactStateService) {
     this.process = INITIAL_STATE;
     const { superClaim ,insured ,contactPersons } = this.process    
     this.superClaim = superClaim;
@@ -100,6 +107,25 @@ export class ProcessClaimComponent implements OnInit {
     this.contactPersons = contactPersons;
   }
 
-  ngOnInit(): void {
+  resetChildForm(): void {
+    this.formStateService.triggerResetForm();
   }
+  submitChildForm(): void {
+    this.formStateService.triggerSubmitForm();
+  }
+  ngOnInit(): void {
+    this.contactService.setContacts(this.contactPersons)
+    this.formStateService.getFormData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(formData => {
+      this.receivedFormData = formData;
+    });
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 }
+
+

@@ -45,7 +45,6 @@ export const SUBMITION_METHOD: SelectOption[] = [
   { code: 2, value: 'דיגיטל' },
   { code: 3, value: 'פקס' },
 ];
-
 export const IDENTITY_TYPES: SelectOption[] = [
   { code: 1, value: 'ת.ז.' },
   { code: 2, value: 'דרכון' },

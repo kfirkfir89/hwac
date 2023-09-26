@@ -8,23 +8,27 @@ html, app-root {
   align-items: center;
   font-family: Arial;
 }
+.btn {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-radius: 0.25rem;
+  color: white;
+  background-color: #1e3a8a;
+  white-space: nowrap;
+}
 .whitespace-nowrap {
   white-space: nowrap;
 }
 .bg-gray {
   background-color: #f3f4f6;
 }
-.bg-blue {
-  background-color: #1e3a8a;
-}
 .bg-ligthblue {
   background-color: #dbeafe;
 }
 .text-blue {
   color: #1e3a8a;
-}
-.text-white{
-  color: white;
 }
 .flex {
   display: flex;
@@ -62,6 +66,9 @@ html, app-root {
 .w-200 {
   width: 200px;
 }
+.gap-x-1 {
+  column-gap: 0.25rem;
+}
 .gap-x-5 {
   column-gap: 5rem;
 }
@@ -94,6 +101,10 @@ html, app-root {
   padding-left: 1rem;
   padding-right: 1rem;
 }
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
 .py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -117,9 +128,7 @@ html, app-root {
 .font-bold {
   font-weight: 600;
 }
-.rounded-md {
-  border-radius: 0.25rem;
-}
+
 .container {
   width: 100lvw;
 }

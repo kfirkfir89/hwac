@@ -7,6 +7,8 @@ import { ProcessInformationComponent } from './process-information/process-infor
 import { SelectComponent } from './select/select.component';
 import { ProcessFormComponent } from './process-form/process-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ContactPersonsComponent } from './contact-persons/contact-persons.component';
+import { ContactPersonsCenterComponent } from './contact-persons-center/contact-persons-center.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +16,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     ProcessClaimComponent,
     ProcessInformationComponent,
     SelectComponent,
-    ProcessFormComponent
+    ProcessFormComponent,
+    ContactPersonsComponent,
+    ContactPersonsCenterComponent
   ],
   imports: [
     BrowserModule,
