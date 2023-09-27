@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject,Observable,Subject } from 'rxjs';
 import { SelectOption } from '../constants/select-options.constants';
-import { ClaimForm } from '../process-form/process-form.component';
+
 export type FormDataSubscription = {
   eventDate: Date | null;
   claimType: SelectOption | null;
@@ -22,30 +22,38 @@ export class FormStateService {
     submitionMethod: null,
     submitedBy: null
   };
+  
 
-  private formData$ = new BehaviorSubject<FormDataSubscription>(
+  formData$ = new BehaviorSubject<FormDataSubscription>(
     this.initialState
     );
     
   private submitFormSubject = new Subject<void>();
   private resetFormSubject = new Subject<void>();
+  private isFormInvalidSubject = new Subject<void>();
 
   resetForm$ = this.resetFormSubject.asObservable();
   submitForm$ = this.submitFormSubject.asObservable();
+  isFormInvalid$ = this.isFormInvalidSubject.asObservable();
 
   triggerResetForm() {
     this.resetFormSubject.next();
   }
-
+  
   triggerSubmitForm() {
     this.submitFormSubject.next();
   }
-  public setFormData = (newFormData: FormDataSubscription) => this.formData$.next(newFormData);
-  public getFormData = (): Observable<FormDataSubscription> => this.formData$.asObservable();
-  public resetFormData = () => this.formData$.next(this.initialState);
 
-  // sendFormData(newFormData: FormDataSubscription) {
-  //   this.formData$.subscribe(() => newFormData);  
-  //   console.log('formData:', this.formData$)
-  // }
+  setFormData(newFormData: FormDataSubscription) {
+    return this.formData$.next(newFormData);
+  }
+
+  getFormData(): Observable<FormDataSubscription> {
+    return this.formData$.asObservable();
+  }
+
+  resetFormData() {
+    this.formData$.next(this.initialState);
+  }
+
 }

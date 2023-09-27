@@ -1,19 +1,37 @@
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject,Observable,Subject, take } from 'rxjs';
+import { BehaviorSubject,Observable,Subject, map, take } from 'rxjs';
 import { ContactPersons } from '../process-claim/process-claim.component';
 import {  SelectOption } from '../constants/select-options.constants';
+import { PhoneFormatPipe } from './phone-format.pipe';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactStateService {
-  
+  constructor(private phoneFormatPipe: PhoneFormatPipe) {}
+
   private contacts$ = new BehaviorSubject<ContactPersons[]>([]);
 
   // Function to get the observable of contacts
   getContacts(): Observable<ContactPersons[]> {
     return this.contacts$.asObservable();
+  }
+
+  getPipedContacts(): Observable<ContactPersons[]> {
+    return this.contacts$.asObservable().pipe(
+      map(contacts => 
+        contacts.map(contact => {
+          const transformedContact = { ...contact };
+          transformedContact.phoneNumber = this.phoneFormatPipe.transform(contact.phoneNumber) as string;
+          return transformedContact;
+        })
+      )
+    );
+  }
+
+  getContactsArray(): ContactPersons[] {
+    return this.contacts$.getValue();
   }
 
   // Function to add a contact to the contacts list

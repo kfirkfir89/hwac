@@ -17,6 +17,15 @@ html, app-root {
   color: white;
   background-color: #1e3a8a;
   white-space: nowrap;
+  cursor: pointer;
+}
+.disabled-btn {
+  background-color: grey;
+  cursor: not-allowed;
+  /* Any other styling you wish to apply */
+}
+.top-border {
+  border-top: 2px solid #1e3a8a;
 }
 .whitespace-nowrap {
   white-space: nowrap;

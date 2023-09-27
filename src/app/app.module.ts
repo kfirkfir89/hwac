@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule,  } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -9,6 +9,7 @@ import { ProcessFormComponent } from './process-form/process-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ContactPersonsComponent } from './contact-persons/contact-persons.component';
 import { ContactPersonsCenterComponent } from './contact-persons-center/contact-persons-center.component';
+import { PhoneFormatPipe } from './services/phone-format.pipe';
 
 @NgModule({
   declarations: [
@@ -18,13 +19,14 @@ import { ContactPersonsCenterComponent } from './contact-persons-center/contact-
     SelectComponent,
     ProcessFormComponent,
     ContactPersonsComponent,
-    ContactPersonsCenterComponent
+    ContactPersonsCenterComponent,
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
+    
   ],
-  providers: [],
+  providers: [PhoneFormatPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
