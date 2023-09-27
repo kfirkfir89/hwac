@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FormDataSubscription, FormStateService } from '../services/formState.service';
+import { ClaimForm, ClaimFormStateService } from '../services/claimFormState.service';
 import { Subject, takeUntil, tap } from 'rxjs';
-import { ContactStateService } from '../services/contactState.service';
+import { ContactFormStateService } from '../services/contactFormState.service';
 
 export type ContactPersons = {
   id: number;
@@ -91,7 +91,7 @@ export const INITIAL_STATE: IProcess = {
   selector: 'app-process-claim',
   template: `
     <div class="container flex flex-col p-4 w-100vw">
-      Value: {{ receivedFormData | json }}
+      Value: {{ claimForm$ | json }}
       <div class="flex align-center bg-gray p-4 top-border">
         <div class="flex-1 px-8">
           <button (click)="resetChildForm()" dir="rtl" class="btn">רענן תהליך</button>
@@ -121,11 +121,12 @@ export class ProcessClaimComponent implements OnInit {
   superClaim: SuperClaim;
   insured: Insured;
   contactPersons: ContactPersons[] = [];
-  receivedFormData: FormDataSubscription | null = null;
+  claimForm$: ClaimForm;
   private destroy$ = new Subject<void>();
-  isDisabled = true; 
-  constructor(private formStateService: FormStateService, private contactService: ContactStateService) {
+  isDisabled = !this.claimFormStateService.claimForm.valid;
+  constructor(private claimFormStateService: ClaimFormStateService, private contactService: ContactFormStateService) {
     this.process = INITIAL_STATE;
+    this.claimForm$ = claimFormStateService.claimForm.value
     const { superClaim ,insured ,contactPersons } = this.process    
     this.superClaim = superClaim;
     this.insured = insured;
@@ -133,23 +134,23 @@ export class ProcessClaimComponent implements OnInit {
   }
 
   resetChildForm(): void {
-    this.formStateService.triggerResetForm();
+    this.claimFormStateService.triggerResetForm();
   }
   submitChildForm(): void {
-    this.formStateService.triggerSubmitForm();
+    this.claimFormStateService.onSubmit();
   }
   ngOnInit(): void {
     this.contactService.setContacts(this.contactPersons)
-    this.formStateService.getFormData()
+    this.claimFormStateService.getFormData()
       .pipe(takeUntil(this.destroy$))
       .subscribe(formData => {
-        this.receivedFormData = formData;
+        this.claimForm$ = formData;
       });
-      this.formStateService.isFormInvalid$
+      this.claimFormStateService.isFormInvalid$()
       .pipe(takeUntil(this.destroy$))
       .subscribe(isInvalid => {
-        console.log('Received in parent:', isInvalid); // in parent component
-        this.isDisabled = isInvalid!;
+        console.log('Received in parent:', isInvalid);
+        this.isDisabled = isInvalid;
       });
   }
   ngOnDestroy(): void {

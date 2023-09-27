@@ -3,7 +3,7 @@ import { ContactPersons } from '../process-claim/process-claim.component';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CONTACT_PERSON_TYPE, SelectOption } from '../constants/select-options.constants';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ContactStateService } from '../services/contactState.service';
+import { ContactFormStateService } from '../services/contactFormState.service';
 import { PhoneFormatPipe } from '../services/phone-format.pipe';
 
 
@@ -26,7 +26,7 @@ export class ContactPersonsComponent {
   isNewContact = false;
   contactPersonTypeOptions$ = new BehaviorSubject<SelectOption[]>(CONTACT_PERSON_TYPE);
   contacts$: Observable<ContactPersons[]>; // holds the contacts observable
-  constructor(private fb: FormBuilder, private contactService: ContactStateService, private phoneFormatPipe: PhoneFormatPipe // Injecting the pipe here
+  constructor(private fb: FormBuilder, private contactService: ContactFormStateService, private phoneFormatPipe: PhoneFormatPipe // Injecting the pipe here
   ) {
     this.contacts$ = this.contactService.getPipedContacts();
     this.contactForm = this.fb.group({

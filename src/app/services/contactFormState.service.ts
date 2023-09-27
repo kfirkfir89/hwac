@@ -8,7 +8,7 @@ import { PhoneFormatPipe } from './phone-format.pipe';
 @Injectable({
   providedIn: 'root'
 })
-export class ContactStateService {
+export class ContactFormStateService {
   constructor(private phoneFormatPipe: PhoneFormatPipe) {}
 
   private contacts$ = new BehaviorSubject<ContactPersons[]>([]);

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ContactStateService } from '../services/contactState.service';
+import { ContactFormStateService } from '../services/contactFormState.service';
 import { ContactPersons, Insured } from '../process-claim/process-claim.component';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CONTACT_PERSON_TYPE, SelectOption } from '../constants/select-options.constants';
@@ -14,7 +14,7 @@ export class ContactPersonsCenterComponent {
   contacts$: Observable<ContactPersons[]>; // holds the contacts observable
   contactPersonTypeOptions$ = new BehaviorSubject<SelectOption[]>(CONTACT_PERSON_TYPE);
 
-  constructor(private contactService: ContactStateService) {
+  constructor(private contactService: ContactFormStateService) {
     this.contacts$ = this.contactService.getContacts();
   }
 
