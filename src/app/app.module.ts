@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ContactPersonsComponent } from './contact-persons/contact-persons.component';
 import { ContactPersonsCenterComponent } from './contact-persons-center/contact-persons-center.component';
 import { PhoneFormatPipe } from './services/phone-format.pipe';
+import { ContactFormComponent } from './contact-form/contact-form.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { PhoneFormatPipe } from './services/phone-format.pipe';
     ProcessFormComponent,
     ContactPersonsComponent,
     ContactPersonsCenterComponent,
+    ContactFormComponent,
   ],
   imports: [
     BrowserModule,

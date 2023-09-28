@@ -4,6 +4,7 @@ import { ClaimForm, ClaimFormStateService } from '../services/claimFormState.ser
 import { Subject, takeUntil, tap } from 'rxjs';
 import { ContactFormStateService } from '../services/contactFormState.service';
 
+// defining types and interfaces for the components
 export type ContactPersons = {
   id: number;
   deliveryFlag: boolean;
@@ -40,6 +41,7 @@ export interface IProcess {
   contactPersons: ContactPersons[];
 }
 
+// defining initial state of the process
 export const INITIAL_STATE: IProcess = {
   superClaim: {
     superClaimNum: 1,
@@ -94,7 +96,7 @@ export const INITIAL_STATE: IProcess = {
       Value: {{ claimForm$ | json }}
       <div class="flex align-center bg-gray p-4 top-border">
         <div class="flex-1 px-8">
-          <button (click)="resetChildForm()" dir="rtl" class="btn">רענן תהליך</button>
+          <button (click)="resetClaimForm()" dir="rtl" class="btn">רענן תהליך</button>
         </div>
         <div class="flex-none pr-16">
           <span dir="rtl" class="whitespace-nowrap pr-1">פתוחה</span>
@@ -110,13 +112,14 @@ export const INITIAL_STATE: IProcess = {
       <app-contact-persons />
       <div class="flex align-center p-4">
         <div class="flex-1 px-8">
-          <button [attr.disabled]="isDisabled ? true : null" [class.disabled-btn]="isDisabled" (click)="submitChildForm()" dir="rtl" class="btn">המשך &larr;</button>
+          <button  [class.disabled-btn]="isDisabled" (click)="submitClaimForm()" dir="rtl" class="btn">המשך &larr;</button>
         </div>
       </div>
     </div>
   `,
 })
 export class ProcessClaimComponent implements OnInit {
+  // declaring component state and variables
   process: IProcess;
   superClaim: SuperClaim;
   insured: Insured;
@@ -124,7 +127,10 @@ export class ProcessClaimComponent implements OnInit {
   claimForm$: ClaimForm;
   private destroy$ = new Subject<void>();
   isDisabled = !this.claimFormStateService.claimForm.valid;
+
+  // injecting services
   constructor(private claimFormStateService: ClaimFormStateService, private contactService: ContactFormStateService) {
+    // initializing state variables
     this.process = INITIAL_STATE;
     this.claimForm$ = claimFormStateService.claimForm.value
     const { superClaim ,insured ,contactPersons } = this.process    
@@ -133,26 +139,38 @@ export class ProcessClaimComponent implements OnInit {
     this.contactPersons = contactPersons;
   }
 
-  resetChildForm(): void {
-    this.claimFormStateService.triggerResetForm();
+  // reset the claim form through service
+  resetClaimForm(): void {
+    this.claimFormStateService.resetFormData();
   }
-  submitChildForm(): void {
+
+  // submit the child form through service
+  submitClaimForm(): void {
+    console.log('laimForm$:', this.claimForm$)
     this.claimFormStateService.onSubmit();
   }
+  
+  // component lifecycle hook
   ngOnInit(): void {
+    // initializing contacts array
     this.contactService.setContacts(this.contactPersons)
+    // subscribing to form data changes and updating local variable accordingly
     this.claimFormStateService.getFormData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(formData => {
-        this.claimForm$ = formData;
-      });
-      this.claimFormStateService.isFormInvalid$()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(isInvalid => {
-        console.log('Received in parent:', isInvalid);
-        this.isDisabled = isInvalid;
-      });
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(formData => {
+      this.claimForm$ = formData;
+    });
+    // subscribing to form validity changes and updating the disabled state of submit button
+    this.claimFormStateService.isFormInvalid$()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(isInvalid => {
+      console.log('Received in parent:', isInvalid);
+      this.isDisabled = isInvalid;
+    });
   }
+
+  // component lifecycle hook, cleanup function
+  // completing the destroy observable to clean up subscriptions
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

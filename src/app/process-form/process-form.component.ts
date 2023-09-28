@@ -11,15 +11,6 @@ import {
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ClaimFormStateService } from '../services/claimFormState.service';
 
-export type ClaimForm = {
-  eventDate: [Date | null, Validators],
-  claimType: [SelectOption | null, Validators],
-  injuryType: [SelectOption | null, Validators],
-  claimCause: [SelectOption | null, Validators],
-  submitionMethod: SelectOption | null,
-  submitedBy: [SelectOption | null, Validators]
-}
-
 @Component({
   selector: 'app-process-form',
   template: `
@@ -82,13 +73,14 @@ export type ClaimForm = {
 })
 export class ProcessFormComponent{
 
+  // initializing form select options with BehaviorSubjects
   claimCauseOptions$ = new BehaviorSubject<SelectOption[]>(CLAIM_CAUSE);
   contactPersonTypeOptions$ = new BehaviorSubject<SelectOption[]>(CONTACT_PERSON_TYPE);
   injuryTypeOptions$ = new BehaviorSubject<SelectOption[]>(INJURY_TYPE);
   submitionMethodOptions$ = new BehaviorSubject<SelectOption[]>(SUBMITION_METHOD);
   claimTypeOptions$ = new BehaviorSubject<SelectOption[]>(CLAIM_TYPE);
   
+  // injecting claimFormStateService and initializing claimForm with the form group from the service
   constructor(private claimFormStateService: ClaimFormStateService) {}
   claimForm = this.claimFormStateService.claimForm;
-
 }
