@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { ClaimForm, ClaimFormStateService } from '../services/claimFormState.service';
 import { Subject, takeUntil, tap } from 'rxjs';
 import { ContactFormStateService } from '../services/contactFormState.service';
 
 // defining types and interfaces for the components
-export type ContactPersons = {
+export type ContactPerson = {
   id: number;
   deliveryFlag: boolean;
   type: {
@@ -38,7 +37,7 @@ export type Insured = {
 export interface IProcess {
   superClaim: SuperClaim,
   insured: Insured,
-  contactPersons: ContactPersons[];
+  contactPersons: ContactPerson[];
 }
 
 // defining initial state of the process
@@ -66,7 +65,7 @@ export const INITIAL_STATE: IProcess = {
       id: 1,
       deliveryFlag: false,
       type: {
-        code: 1,
+        code: 2,
         value: 'סוכן',
       },
       name: 'טוביה בצקי',
@@ -93,7 +92,7 @@ export const INITIAL_STATE: IProcess = {
   selector: 'app-process-claim',
   template: `
     <div class="container flex flex-col p-4 w-100vw">
-      Value: {{ claimForm$ | json }}
+      <!-- Value: {{ claimForm$ | json }} -->
       <div class="flex align-center bg-gray p-4 top-border">
         <div class="flex-1 px-8">
           <button (click)="resetClaimForm()" dir="rtl" class="btn">רענן תהליך</button>
@@ -112,7 +111,7 @@ export const INITIAL_STATE: IProcess = {
       <app-contact-persons />
       <div class="flex align-center p-4">
         <div class="flex-1 px-8">
-          <button  [class.disabled-btn]="isDisabled" (click)="submitClaimForm()" dir="rtl" class="btn">המשך &larr;</button>
+          <button  [attr.disabled]="isDisabled ? true : null" [class.disabled-btn]="isDisabled" (click)="submitClaimForm()" dir="rtl" class="btn">המשך &larr;</button>
         </div>
       </div>
     </div>
@@ -123,7 +122,7 @@ export class ProcessClaimComponent implements OnInit {
   process: IProcess;
   superClaim: SuperClaim;
   insured: Insured;
-  contactPersons: ContactPersons[] = [];
+  contactPersons: ContactPerson[] = [];
   claimForm$: ClaimForm;
   private destroy$ = new Subject<void>();
   isDisabled = !this.claimFormStateService.claimForm.valid;
@@ -146,9 +145,9 @@ export class ProcessClaimComponent implements OnInit {
 
   // submit the child form through service
   submitClaimForm(): void {
-    console.log('laimForm$:', this.claimForm$)
     const contacts = this.contactService.getContactsArray()
-    this.claimFormStateService.onSubmit(contacts);
+    const formData = this.claimFormStateService.onSubmit(contacts);
+    console.log('formData:', formData)
   }
   
   // component lifecycle hook
@@ -165,7 +164,6 @@ export class ProcessClaimComponent implements OnInit {
     this.claimFormStateService.isFormInvalid$()
     .pipe(takeUntil(this.destroy$))
     .subscribe(isInvalid => {
-      console.log('Received in parent:', isInvalid);
       this.isDisabled = isInvalid;
     });
   }

@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { BehaviorSubject,Observable,Subject, map, take } from 'rxjs';
-import { ContactPersons } from '../process-claim/process-claim.component';
+import { ContactPerson, Insured } from '../process-claim/process-claim.component';
 import { PhoneFormatPipe } from './phone-format.pipe';
 import { FormBuilder, FormGroup, MaxValidator, Validators } from '@angular/forms';
 import { CONTACT_PERSON_TYPE, SelectOption } from '../constants/select-options.constants';
@@ -44,7 +44,7 @@ export class ContactFormStateService {
   }
 
   // initializing contacts behavior subject
-  private contacts$ = new BehaviorSubject<ContactPersons[]>([]);
+  private contacts$ = new BehaviorSubject<ContactPerson[]>([]);
   private preferredContactsCounter$ = new BehaviorSubject<number>(0);
   contactPersonTypeOptions$ = new BehaviorSubject<SelectOption[]>(CONTACT_PERSON_TYPE);
   isNewContact$ = new BehaviorSubject<boolean>(false);
@@ -62,9 +62,8 @@ export class ContactFormStateService {
       const contactTypeOptions = this.contactPersonTypeOptions$.getValue();
       const contacts = this.getContactsArray();
       const nextId = contacts.length + 1; // taking the next id for the new contact
-      console.log('formValue:', formValue, contactTypeOptions)
       const contactType: SelectOption = contactTypeOptions.find((option) => option.code === +formValue.type)!
-      const newContact: ContactPersons = {
+      const newContact: ContactPerson = {
         id: nextId,
         deliveryFlag: formValue.preferred,
         type: {code: contactType.code, value:contactType.value},
@@ -73,7 +72,7 @@ export class ContactFormStateService {
         email: formValue.email,
         address: formValue.address
       }
-      console.log('newContact:', newContact)
+      
       this.addContact(newContact);
       this.isNewContact$.next(false);
       this.resetForm();
@@ -93,12 +92,12 @@ export class ContactFormStateService {
     return this.preferredContactsCounter$.asObservable();
   }
   // get contacts observable
-  getContacts(): Observable<ContactPersons[]> {
+  getContacts(): Observable<ContactPerson[]> {
     return this.contacts$.asObservable();
   }
 
   // piped contacts observable for the phone number whather if its formated string for ui or number for data storage
-  getPipedContacts(): Observable<ContactPersons[]> {
+  getPipedContacts(): Observable<ContactPerson[]> {
     return this.contacts$.asObservable().pipe(
       map(contacts => 
         contacts.map(contact => {
@@ -110,32 +109,33 @@ export class ContactFormStateService {
     );
   }
 
-  getContactsArray(): ContactPersons[] {
+  getContactsArray(): ContactPerson[] {
     return this.contacts$.getValue();
   }
 
   // add a new contact to the contacts list
-  addContact(contact: ContactPersons): void {
+  addContact(contact: ContactPerson): void {
     this.contacts$.next([...this.contacts$.getValue(), contact]);
   }
 
   // add insured to contacts
-  addInsured(insured: ContactPersons): void {
-    // subscribe to contacts$ to get the latest emitted value
-    this.contacts$.subscribe(contacts => {
-    // check if the contact is already in the contacts to prevent duplicate
-    const isContactAlreadyIn = contacts.some(contact => contact.id === insured.id);   
-    // if the contact is not already in the contacts, then add it
-    if (!isContactAlreadyIn) {
-        this.contacts$.next([...this.contacts$.getValue(), insured]);
-      } else {
-        return;
-      }
-    });
+  addInsured(insured: Insured, typeData: SelectOption): void {
+    
+  const insuredAsContact: ContactPerson = {
+    id: insured.identity,
+    deliveryFlag: true,
+    type: typeData!,
+    name: `${insured.firstName} ${insured.lastName}`,
+    phoneNumber: '',
+    email: '',
+    address: `${insured.address.streetName},${insured.address.cityName}`,
+  }
+  this.addContact(insuredAsContact);
+
   }
 
   // set (replace) the whole contacts list
-  setContacts(contacts: ContactPersons[]): void {
+  setContacts(contacts: ContactPerson[]): void {
     this.contacts$.next(contacts);
   }
 

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ContactFormStateService } from '../services/contactFormState.service';
-import { ContactPersons, Insured } from '../process-claim/process-claim.component';
+import { ContactPerson, Insured } from '../process-claim/process-claim.component';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CONTACT_PERSON_TYPE, SelectOption } from '../constants/select-options.constants';
 
@@ -11,7 +11,7 @@ import { CONTACT_PERSON_TYPE, SelectOption } from '../constants/select-options.c
 })
 export class ContactPersonsCenterComponent {
   @Input() insured!: Insured;  
-  contacts$: Observable<ContactPersons[]>; // holds the contacts observable
+  contacts$: Observable<ContactPerson[]>; // holds the contacts observable
   contactPersonTypeOptions$ = new BehaviorSubject<SelectOption[]>(CONTACT_PERSON_TYPE);
 
   constructor(private contactService: ContactFormStateService) {
@@ -22,17 +22,9 @@ export class ContactPersonsCenterComponent {
     // createing the type object
     const options = this.contactPersonTypeOptions$.getValue();
     const typeData = options.find((option) => option.code === this.insured.identityType);
-    console.log('typeData:', typeData)
-    const insuredAsContact: ContactPersons = {
-      id: this.insured.identity,
-      deliveryFlag: true,
-      type: typeData!,
-      name: `${this.insured.firstName} ${this.insured.lastName}`,
-      phoneNumber: 0,
-      email: '',
-      address: `${this.insured.address.streetName},${this.insured.address.cityName}`,
+    if(typeData){
+      this.contactService.addInsured(this.insured, typeData);
     }
-    this.contactService.addInsured(insuredAsContact);
   }
 
   resetContacts() {

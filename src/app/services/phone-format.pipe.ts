@@ -7,7 +7,7 @@ export class PhoneFormatPipe implements PipeTransform {
 
   transform(value: string | number): string | number {
     if (typeof value === 'string') {
-      return this.transformToNumber(value);
+      return value ? this.transformToNumber(value) : '';
     } else if (typeof value === 'number') {
       return this.transformToString(value);
     } else {

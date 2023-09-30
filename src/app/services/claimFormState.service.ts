@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject,Observable,Subject } from 'rxjs';
 import { SelectOption } from '../constants/select-options.constants';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ContactPersons } from '../process-claim/process-claim.component';
+import { ContactPerson } from '../process-claim/process-claim.component';
 
 // defining the interface for the claim form
 export interface ClaimForm {
@@ -53,21 +53,27 @@ export class ClaimFormStateService {
   }
 
   // sumbit handler
-  onSubmit(contacts: ContactPersons[]): void {
+  onSubmit(contacts: ContactPerson[]) {
     // we check if the form properly field with values
     // if its valid we pass it as FormDataSubscription type since the claimForm is is form control type
-    console.log('formData$:', this.formData$.value)
     if (!this.claimForm.invalid) {
-      console.log('formData$:', this.formData$.value)
+      const formData = this.formData$.getValue();
       // checking for matching contact person
+      let isContactInvalid = true;
       const submitedByOption = this.formData$.getValue().submitedBy;
-      // contacts.forEach((contact) => {
-      //   if(contact.)
-      // });
-      // convert the type to select options..
-    } else {
-      alert('The form is invalid!');
+      for(let i = 0; i < contacts.length; i++){
+        if(contacts[i].type.code === submitedByOption!.code){
+          isContactInvalid = false;
+        }
+      }
+      if(isContactInvalid){
+        alert('חייב להיות איש קשר מאותו הסוג')
+      }
+      return formData;
     }
+
+    alert('The form is invalid!');
+    return;
   }
 
   // get the observable of the form data

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ContactPersons } from '../process-claim/process-claim.component';
+import { ContactPerson } from '../process-claim/process-claim.component';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CONTACT_PERSON_TYPE, SelectOption } from '../constants/select-options.constants';
 import { ContactFormStateService } from '../services/contactFormState.service';
@@ -55,7 +55,7 @@ export interface ContactFormValue {
 })
 export class ContactPersonsComponent {
   contactPersonTypeOptions$ = new BehaviorSubject<SelectOption[]>(CONTACT_PERSON_TYPE);
-  contacts$: Observable<ContactPersons[]>; // holds the contacts observable
+  contacts$: Observable<ContactPerson[]>; // holds the contacts observable
   isNewContact = this.contactFormStateService.isNewContact$;
   constructor( private contactFormStateService: ContactFormStateService, private phoneFormatPipe: PhoneFormatPipe // Injecting the pipe here
   ) {
