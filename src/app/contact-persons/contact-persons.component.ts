@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { ContactPersons } from '../process-claim/process-claim.component';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CONTACT_PERSON_TYPE, SelectOption } from '../constants/select-options.constants';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ContactFormStateService } from '../services/contactFormState.service';
 import { PhoneFormatPipe } from '../services/phone-format.pipe';
 

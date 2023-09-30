@@ -147,7 +147,8 @@ export class ProcessClaimComponent implements OnInit {
   // submit the child form through service
   submitClaimForm(): void {
     console.log('laimForm$:', this.claimForm$)
-    this.claimFormStateService.onSubmit();
+    const contacts = this.contactService.getContactsArray()
+    this.claimFormStateService.onSubmit(contacts);
   }
   
   // component lifecycle hook

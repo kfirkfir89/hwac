@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject,Observable,Subject } from 'rxjs';
 import { SelectOption } from '../constants/select-options.constants';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ContactPersons } from '../process-claim/process-claim.component';
 
 // defining the interface for the claim form
 export interface ClaimForm {
@@ -34,7 +35,6 @@ export class ClaimFormStateService {
 
     // initializing the form data with the form group value and validators
     this.formData$ = new BehaviorSubject<ClaimForm>(this.claimForm.value);
-
     // subscribing to form value changes to update the form data
     this.claimForm.valueChanges.subscribe(value => this.formData$.next(value));
     // subscribing to status changes to emit form validity
@@ -53,13 +53,17 @@ export class ClaimFormStateService {
   }
 
   // sumbit handler
-  onSubmit(): void {
+  onSubmit(contacts: ContactPersons[]): void {
     // we check if the form properly field with values
     // if its valid we pass it as FormDataSubscription type since the claimForm is is form control type
     console.log('formData$:', this.formData$.value)
     if (!this.claimForm.invalid) {
       console.log('formData$:', this.formData$.value)
       // checking for matching contact person
+      const submitedByOption = this.formData$.getValue().submitedBy;
+      // contacts.forEach((contact) => {
+      //   if(contact.)
+      // });
       // convert the type to select options..
     } else {
       alert('The form is invalid!');

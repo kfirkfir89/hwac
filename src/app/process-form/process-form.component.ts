@@ -9,7 +9,7 @@ import {
   CLAIM_TYPE,
   IDENTITY_TYPES} from '../constants/select-options.constants';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ClaimFormStateService } from '../services/claimFormState.service';
+import { ClaimForm, ClaimFormStateService } from '../services/claimFormState.service';
 
 @Component({
   selector: 'app-process-form',
@@ -35,7 +35,7 @@ import { ClaimFormStateService } from '../services/claimFormState.service';
 
       <div class="flex flex-nowrap p-1">
         <div class="flex-1">
-            <app-select formControlName="injuryType" [options$]="injuryTypeOptions$" [isDisabled]="claimForm.get('claimCause')?.value === null" ></app-select>
+            <app-select formControlName="injuryType" [options$]="injuryTypeOptions$" [isDisabled]="claimCauseInvalid === null" ></app-select>
         </div>
         <div class="flex-none">
           <span dir="rtl"  class="whitespace-nowrap">מהות האירוע:</span>
@@ -81,6 +81,11 @@ export class ProcessFormComponent{
   claimTypeOptions$ = new BehaviorSubject<SelectOption[]>(CLAIM_TYPE);
   
   // injecting claimFormStateService and initializing claimForm with the form group from the service
-  constructor(private claimFormStateService: ClaimFormStateService) {}
+  constructor(private claimFormStateService: ClaimFormStateService) {
+    this.claimFormStateService.formData$.subscribe((formData) => {
+      this.claimCauseInvalid = formData.claimCause
+    })
+  }
   claimForm = this.claimFormStateService.claimForm;
+  claimCauseInvalid: SelectOption | null = this.claimForm.get('claimCause')?.value;
 }
