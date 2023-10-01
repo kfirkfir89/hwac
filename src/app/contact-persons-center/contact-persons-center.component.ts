@@ -39,26 +39,30 @@ export class ContactPersonsCenterComponent {
   contacts$: Observable<ContactPerson[]>; // holds the contacts observable
   contactPersonTypeOptions$ = new BehaviorSubject<SelectOption[]>(CONTACT_PERSON_TYPE);
 
-  constructor(private contactService: ContactFormStateService) {
-    this.contacts$ = this.contactService.getContacts();
+  constructor(private contactFormStateService: ContactFormStateService) {
+    this.contacts$ = this.contactFormStateService.getContacts();
   }
 
   // adding the infured to the contacts
   setInfuredAsContact() {
+    const contacts = this.contactFormStateService.getContactsArray();
+    if(contacts.some((contact) => contact.id === this.insured.identity)){
+      return;
+    }
     const options = this.contactPersonTypeOptions$.getValue();
     // geting the type object from the select options for the insured data
     const typeData = options.find((option) => option.code === this.insured.identityType);
     if(typeData){
-      this.contactService.addInsured(this.insured, typeData);
+      this.contactFormStateService.addInsured(this.insured, typeData);
     }
   }
   // reset all contacts that are not prefferd
   resetContacts() {
-    this.contactService.resetContacts()
+    this.contactFormStateService.resetContacts()
   }
 
   // delete all the contacts
   fullyResetContacts() {
-    this.contactService.fullyResetContacts()
+    this.contactFormStateService.fullyResetContacts()
   }
 }

@@ -92,7 +92,7 @@ export const INITIAL_STATE: IProcess = {
   selector: 'app-process-claim',
   template: `
     <div class="container flex flex-col p-4 w-100vw">
-      Value: {{ claimForm$ | json }}
+      <!-- Value: {{ claimForm$ | json }} -->
       <div class="flex align-center bg-gray p-4 top-border">
         <div class="flex-1 px-8">
           <button (click)="resetClaimForm()" dir="rtl" class="btn">רענן תהליך</button>

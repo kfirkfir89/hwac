@@ -1,8 +1,7 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectOption } from '../constants/select-options.constants';
-import { BehaviorSubject, map, Observable, take } from 'rxjs';
-import { ClaimFormStateService } from '../services/claimFormState.service';
+import { BehaviorSubject, Observable, take } from 'rxjs';
 
 // set up component metadata and template
 // The provider object with NG_VALUE_ACCESSOR is setting up this component as a custom form control value accessor. 
@@ -11,11 +10,9 @@ import { ClaimFormStateService } from '../services/claimFormState.service';
 @Component({
   selector: 'app-select',
   template: `
-    <select dir="rtl" class="w-200 p-1" [value]="valueSubject$ | async" (change)="selectChange($event)" [attr.disabled]="isDisabled ? true : null">
-      <option [value]="" selected hidden></option>
-      <option [value]="option" *ngFor="let option of options$ | async">
-        {{ option.value }}
-      </option>
+    <select #selectElement [value]="valueSubject$" dir="rtl" class="w-200 p-1" (change)="selectChange($event)" [attr.disabled]="isDisabled ? true : null">
+        <option [value]="" selected hidden></option>
+        <option *ngFor="let option of options$ | async" [ngValue]="option">{{ option.value }}</option>
     </select>
   `,
   providers: [
@@ -29,9 +26,9 @@ import { ClaimFormStateService } from '../services/claimFormState.service';
 export class SelectComponent implements ControlValueAccessor {
   // initialize input properties
   @Input() options$!: Observable<SelectOption[] | null>;
-  // @Input() value$!: BehaviorSubject<SelectOption | null>;
   @Input() isDisabled!: boolean;
-
+  @ViewChild('selectElement') select!: ElementRef<HTMLSelectElement>;
+ 
   valueSubject = new BehaviorSubject<SelectOption | null>(null);
   valueSubject$ = this.valueSubject.asObservable();
 
@@ -42,10 +39,18 @@ export class SelectComponent implements ControlValueAccessor {
   selectChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const selectedIndex = target.selectedIndex - 1;
-    this.options$.subscribe(options => {
-      this.valueSubject.next(options![selectedIndex]);
-      this.onChange(this.valueSubject?.getValue());
+    this.options$.pipe(take(1)).subscribe(options => {
+      if (options) {
+        this.valueSubject.next(options[selectedIndex]);
+        this.onChange(options[selectedIndex]);
+      }
     });
+    // change the select value when reset form
+    this.valueSubject.subscribe((value) => {
+      if(value === null){
+        this.select.nativeElement.value = '';
+      }
+    })
   }
 
   // implement control value accessor methods to interact with parent forms
@@ -58,10 +63,6 @@ export class SelectComponent implements ControlValueAccessor {
   }
 
   registerOnTouched(fn: () => void): void {
-  }
-  resetValue(): void {
-    this.writeValue(null);
-    this.onChange(null); // to notify parent form control that the value has been updated to null
   }
 
 }

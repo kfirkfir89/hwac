@@ -6,7 +6,7 @@ import { ProcessClaimComponent } from './process-claim/process-claim.component';
 import { ProcessInformationComponent } from './process-information/process-information.component';
 import { SelectComponent } from './select/select.component';
 import { ProcessFormComponent } from './process-form/process-form.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import {  FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ContactPersonsComponent } from './contact-persons/contact-persons.component';
 import { ContactPersonsCenterComponent } from './contact-persons-center/contact-persons-center.component';
 import { PhoneFormatPipe } from './services/phone-format.pipe';
@@ -26,7 +26,6 @@ import { ContactFormComponent } from './contact-form/contact-form.component';
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-    
   ],
   providers: [PhoneFormatPipe],
   bootstrap: [AppComponent]

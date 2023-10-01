@@ -97,6 +97,5 @@ export class ClaimFormStateService {
     });
     this.claimForm.reset();
     this.claimForm.setValue(this.formData$.getValue())
-    console.log('claimForm:', this.claimForm.value)
   }
 }
