@@ -87,7 +87,6 @@ export class ClaimFormStateService {
 
   // reset the form data
   resetFormData() {
-    this.claimForm.reset();
     this.formData$.next({
       eventDate: null,
       claimType: null,
@@ -96,5 +95,8 @@ export class ClaimFormStateService {
       submitionMethod: null,
       submitedBy: null,
     });
+    this.claimForm.reset();
+    this.claimForm.setValue(this.formData$.getValue())
+    console.log('claimForm:', this.claimForm.value)
   }
 }

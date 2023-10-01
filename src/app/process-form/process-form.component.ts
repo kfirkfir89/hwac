@@ -25,7 +25,7 @@ import { ClaimForm, ClaimFormStateService } from '../services/claimFormState.ser
 
       <div class="flex flex-nowrap p-1">
         <div class="flex-1">
-            <app-select formControlName="claimType" [value$]="claimTypeValue$" [options$]="claimTypeOptions$"></app-select>
+            <app-select formControlName="claimType" [options$]="claimTypeOptions$"></app-select>
         </div>
         <div class="flex-none">
           <span dir="rtl" class="whitespace-nowrap">סוג תביעה על:</span>
@@ -34,7 +34,7 @@ import { ClaimForm, ClaimFormStateService } from '../services/claimFormState.ser
 
       <div class="flex flex-nowrap p-1">
         <div class="flex-1">
-            <app-select formControlName="injuryType" [value$]="injuryTypeValue$" [options$]="injuryTypeOptions$" [isDisabled]="(claimCauseValue$ | async) === null" ></app-select>
+            <app-select formControlName="injuryType" [options$]="injuryTypeOptions$" [isDisabled]="(claimCauseValue$ | async) === null" ></app-select>
         </div>
         <div class="flex-none">
           <span dir="rtl"  class="whitespace-nowrap">מהות האירוע:</span>
@@ -43,7 +43,7 @@ import { ClaimForm, ClaimFormStateService } from '../services/claimFormState.ser
 
       <div class="flex flex-nowrap p-1">
         <div class="flex-1">
-            <app-select formControlName="claimCause" [value$]="claimCauseValue$" [options$]="claimCauseOptions$"></app-select>
+            <app-select formControlName="claimCause" [options$]="claimCauseOptions$"></app-select>
         </div>
         <div class="flex-none">
           <span dir="rtl" class="whitespace-nowrap">סיבת אירוע:</span>
@@ -52,7 +52,7 @@ import { ClaimForm, ClaimFormStateService } from '../services/claimFormState.ser
 
       <div class="flex flex-nowrap p-1">
         <div class="flex-1">
-            <app-select formControlName="submitionMethod" [value$]="submitionMethodValue$" [options$]="submitionMethodOptions$"></app-select>
+            <app-select formControlName="submitionMethod" [options$]="submitionMethodOptions$"></app-select>
         </div>
         <div class="flex-none">
           <span dir="rtl" class="whitespace-nowrap">אופן קבלת התביעה:</span>
@@ -61,7 +61,7 @@ import { ClaimForm, ClaimFormStateService } from '../services/claimFormState.ser
 
       <div class="flex flex-nowrap p-1">
         <div class="flex-1">
-            <app-select formControlName="submitedBy" [value$]="(contactPersonTypeValue$)" [options$]="contactPersonTypeOptions$"></app-select>
+            <app-select formControlName="submitedBy" [options$]="contactPersonTypeOptions$"></app-select>
         </div>
         <div class="flex-none">
           <span dir="rtl" class="whitespace-nowrap">תביעה הוגשה באמצעות:</span>
@@ -80,19 +80,19 @@ export class ProcessFormComponent{
   claimTypeOptions$ = new BehaviorSubject<SelectOption[]>(CLAIM_TYPE);
 
   claimCauseValue$ = new BehaviorSubject<SelectOption | null>(null);
-  contactPersonTypeValue$ = new BehaviorSubject<SelectOption | null>(null);
-  injuryTypeValue$ = new BehaviorSubject<SelectOption | null>(null);
-  submitionMethodValue$ = new BehaviorSubject<SelectOption | null>(null);
-  claimTypeValue$ = new BehaviorSubject<SelectOption | null>(null);
+  // contactPersonTypeValue$ = new BehaviorSubject<SelectOption | null>(null);
+  // injuryTypeValue$ = new BehaviorSubject<SelectOption | null>(null);
+  // submitionMethodValue$ = new BehaviorSubject<SelectOption | null>(null);
+  // claimTypeValue$ = new BehaviorSubject<SelectOption | null>(null);
 
   // injecting claimFormStateService and initializing claimForm values to display the selected option from the form async
   constructor(private claimFormStateService: ClaimFormStateService) {
     this.claimFormStateService.formData$.subscribe((formData) => {
       this.claimCauseValue$.next(formData.claimCause);
-      this.contactPersonTypeValue$.next(formData.submitedBy);
-      this.injuryTypeValue$.next(formData.injuryType);
-      this.submitionMethodValue$.next(formData.submitionMethod);
-      this.claimTypeValue$.next(formData.claimType);
+      // this.contactPersonTypeValue$.next(formData.submitedBy);
+      // this.injuryTypeValue$.next(formData.injuryType);
+      // this.submitionMethodValue$.next(formData.submitionMethod);
+      // this.claimTypeValue$.next(formData.claimType);
       
     })
   }

@@ -11,7 +11,7 @@ import { ClaimFormStateService } from '../services/claimFormState.service';
 @Component({
   selector: 'app-select',
   template: `
-    <select dir="rtl" class="w-200 p-1" [value]="valueSubject" (change)="selectChange($event)" [attr.disabled]="isDisabled ? true : null">
+    <select dir="rtl" class="w-200 p-1" [value]="valueSubject$ | async" (change)="selectChange($event)" [attr.disabled]="isDisabled ? true : null">
       <option [value]="" selected hidden></option>
       <option [value]="option" *ngFor="let option of options$ | async">
         {{ option.value }}
@@ -29,17 +29,12 @@ import { ClaimFormStateService } from '../services/claimFormState.service';
 export class SelectComponent implements ControlValueAccessor {
   // initialize input properties
   @Input() options$!: Observable<SelectOption[] | null>;
-  @Input() value$!: Observable<SelectOption | null>;
+  // @Input() value$!: BehaviorSubject<SelectOption | null>;
   @Input() isDisabled!: boolean;
 
   valueSubject = new BehaviorSubject<SelectOption | null>(null);
-  // valueOb$ = this.value$.asObservable();
+  valueSubject$ = this.valueSubject.asObservable();
 
-  ngOnInit(){
-    this.value$.subscribe((value) => {
-      this.valueSubject.next(value);
-    })
-  }
   // set up method to handle value changes and interactions with parent form
   private onChange: (value: SelectOption | null) => void = () => {};
 
@@ -63,6 +58,10 @@ export class SelectComponent implements ControlValueAccessor {
   }
 
   registerOnTouched(fn: () => void): void {
+  }
+  resetValue(): void {
+    this.writeValue(null);
+    this.onChange(null); // to notify parent form control that the value has been updated to null
   }
 
 }
