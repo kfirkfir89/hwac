@@ -1,6 +1,13 @@
 import { Component } from '@angular/core';
 import { ContactFormStateService } from '../services/contactFormState.service';
 
+//  the ContactFormComponent is a presentational component that provides 
+//  a form interface for creating and managing contact persons. 
+//  it allows users to input details of a contact person such as name, 
+//  type, address, phone, and email, and then add the contact person 
+//  using the provided form controls. 
+//  the component utilizes ContactFormStateService to manage the form state, 
+//  and obtain necessary data like contactPersonTypeOptions.
 @Component({
   selector: 'app-contact-form',
   template: `
@@ -61,10 +68,8 @@ export class ContactFormComponent {
   contactForm = this.contactFormStateService.contactForm;
   contactPersonTypeOptions = this.contactFormStateService.contactPersonTypeOptions$;
 
+  // add new contact(submit handler)
   addNewContact() {
     this.contactFormStateService.addNewContact();
-  }
-  createNewContact() {
-    this.contactFormStateService.newContact();
   }
 }

@@ -1,5 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+// this pipe is tranform the phonenumber to the desire type formated string (054-4212458) or to number (544212458)
+
 @Pipe({
   name: 'phoneFormat'
 })
@@ -7,11 +9,12 @@ export class PhoneFormatPipe implements PipeTransform {
 
   transform(value: string | number): string | number {
     if (typeof value === 'string') {
+      // in case of adding indured to contact display empty string when no phone number included
       return value ? this.transformToNumber(value) : '';
     } else if (typeof value === 'number') {
       return this.transformToString(value);
     } else {
-      return value; // or you can throw an error if the value is neither a string nor a number.
+      return value;
     }
   }
 
@@ -22,6 +25,6 @@ export class PhoneFormatPipe implements PipeTransform {
   
   private transformToString(value: number): string {
     const strValue = '0' + value.toString();
-    return strValue.substring(0, 3) + '-' + strValue.substring(3); // Adding '-' after the third character
+    return strValue.substring(0, 3) + '-' + strValue.substring(3); // adding '-' after the third character
   }
 }

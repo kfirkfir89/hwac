@@ -5,7 +5,7 @@ import { ContactPerson, Insured } from '../process-claim/process-claim.component
 import { PhoneFormatPipe } from './phone-format.pipe';
 import { FormBuilder, FormGroup, MaxValidator, Validators } from '@angular/forms';
 import { CONTACT_PERSON_TYPE, SelectOption } from '../constants/select-options.constants';
-
+// this service handle all the contacts methods and funcunality of the form, table, contacts array state.
 export interface ContactForm {
   preferred: boolean;
   type: number;
@@ -36,6 +36,7 @@ export class ContactFormStateService {
     this.formData$ = new BehaviorSubject<ContactForm>(this.contactForm.value);
     // subscribing to form value changes to update the form data
     this.contactForm.valueChanges.subscribe(value => this.formData$.next(value));
+    // check for the number of preferred contacts to prevent the user from remove all preferred
     this.contacts$.pipe(
       map(currentContacts => 
         currentContacts.filter(contact => contact.deliveryFlag).length
@@ -52,10 +53,12 @@ export class ContactFormStateService {
   getIsNewContact() {
     return this.isNewContact$.getValue();
   }
-  newContact() {
+  // add neew contact button 
+  isNewContact() {
     this.isNewContact$.next(!this.isNewContact$.value);
     this.resetForm();  
   }
+  // add new contact from the form values (sumbit handler)
   addNewContact(): void {
     if (this.contactForm.valid) {
       const formValue: ContactForm = this.contactForm.value;
@@ -82,7 +85,6 @@ export class ContactFormStateService {
       alert('The form is invalid!');
     }
   }
-
 
   resetForm(){
     this.contactForm.reset()

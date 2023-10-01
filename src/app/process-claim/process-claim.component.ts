@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ClaimForm, ClaimFormStateService } from '../services/claimFormState.service';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ContactFormStateService } from '../services/contactFormState.service';
 
-// defining types and interfaces for the components
+// defining types and interfaces for contact person, super claim, insured, and process
 export type ContactPerson = {
   id: number;
   deliveryFlag: boolean;
@@ -92,7 +92,7 @@ export const INITIAL_STATE: IProcess = {
   selector: 'app-process-claim',
   template: `
     <div class="container flex flex-col p-4 w-100vw">
-      <!-- Value: {{ claimForm$ | json }} -->
+      Value: {{ claimForm$ | json }}
       <div class="flex align-center bg-gray p-4 top-border">
         <div class="flex-1 px-8">
           <button (click)="resetClaimForm()" dir="rtl" class="btn">רענן תהליך</button>
@@ -127,9 +127,8 @@ export class ProcessClaimComponent implements OnInit {
   private destroy$ = new Subject<void>();
   isDisabled = !this.claimFormStateService.claimForm.valid;
 
-  // injecting services
-  constructor(private claimFormStateService: ClaimFormStateService, private contactService: ContactFormStateService) {
-    // initializing state variables
+  // constructor to inject services and initialize state variables
+  constructor(private claimFormStateService: ClaimFormStateService, private contactFormStateService: ContactFormStateService) {
     this.process = INITIAL_STATE;
     this.claimForm$ = claimFormStateService.claimForm.value
     const { superClaim ,insured ,contactPersons } = this.process    
@@ -143,17 +142,27 @@ export class ProcessClaimComponent implements OnInit {
     this.claimFormStateService.resetFormData();
   }
 
-  // submit the child form through service
+  // submit the child form through service and get the final results
   submitClaimForm(): void {
-    const contacts = this.contactService.getContactsArray()
-    const formData = this.claimFormStateService.onSubmit(contacts);
-    console.log('formData:', formData)
+    const contacts = this.contactFormStateService.getContactsArray()
+    const contacts$ = this.contactFormStateService.getContacts()
+    const formData = this.claimFormStateService.onSubmit(contacts$);
+    if(formData){
+      this.contactPersons = contacts;
+      const process:IProcess = {
+        superClaim: this.superClaim,
+        insured: this.insured,
+        contactPersons: this.contactPersons,
+      }
+      console.log('formData:', formData)
+      console.log('processWithUpdatedContacts:', process)
+    }
   }
   
-  // component lifecycle hook
+  // ngOnInit lifecycle hook for initializing contacts array and subscriptions
   ngOnInit(): void {
     // initializing contacts array
-    this.contactService.setContacts(this.contactPersons)
+    this.contactFormStateService.setContacts(this.contactPersons)
     // subscribing to form data changes and updating local variable accordingly
     this.claimFormStateService.getFormData()
     .pipe(takeUntil(this.destroy$))

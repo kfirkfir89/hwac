@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Insured } from '../process-claim/process-claim.component';
-
+// the component serves to display information about an insured entity and embeds the 'app-process-form' component.
+// the template is styled using several css classes and arranged using flex layout.
+// it leverages the *ngIf directive to optionally render the insured information, based on its availability.
 @Component({
   selector: 'app-process-information',
   template: `

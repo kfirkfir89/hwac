@@ -3,7 +3,7 @@ import { BehaviorSubject,Observable,Subject } from 'rxjs';
 import { SelectOption } from '../constants/select-options.constants';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ContactPerson } from '../process-claim/process-claim.component';
-
+// service to handle the claim from state
 // defining the interface for the claim form
 export interface ClaimForm {
   eventDate: Date | null;
@@ -53,7 +53,7 @@ export class ClaimFormStateService {
   }
 
   // sumbit handler
-  onSubmit(contacts: ContactPerson[]) {
+  onSubmit(contacts$: Observable<ContactPerson[]>) {
     // we check if the form properly field with values
     // if its valid we pass it as FormDataSubscription type since the claimForm is is form control type
     if (!this.claimForm.invalid) {
@@ -61,15 +61,19 @@ export class ClaimFormStateService {
       // checking for matching contact person
       let isContactInvalid = true;
       const submitedByOption = this.formData$.getValue().submitedBy;
-      for(let i = 0; i < contacts.length; i++){
-        if(contacts[i].type.code === submitedByOption!.code){
-          isContactInvalid = false;
-        }
-      }
+
+      contacts$.subscribe((contacts) => {
+        contacts.map((contact) => {
+          if(contact.type.code === submitedByOption!.code){
+            isContactInvalid = false;
+          }
+        })
+      })
       if(isContactInvalid){
-        alert('חייב להיות איש קשר מאותו הסוג')
+        return alert('חייב להיות איש קשר מאותו הסוג')
+      }else{
+        return formData;
       }
-      return formData;
     }
 
     alert('The form is invalid!');
@@ -83,6 +87,14 @@ export class ClaimFormStateService {
 
   // reset the form data
   resetFormData() {
-    this.claimForm.reset()
+    this.claimForm.reset();
+    this.formData$.next({
+      eventDate: null,
+      claimType: null,
+      injuryType: null,
+      claimCause: null,
+      submitionMethod: null,
+      submitedBy: null,
+    });
   }
 }
