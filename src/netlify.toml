@@ -1,4 +1,0 @@
-[[redirects]]
-  from ="/dist/hwac/*"
-  to ="index.html"
-  status = 200
